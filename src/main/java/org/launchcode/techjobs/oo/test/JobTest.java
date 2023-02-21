@@ -53,10 +53,15 @@ public class JobTest {
     @Test
     public void testToStringStartsAndEndsWithNewLine() {
         Job job = new Job("Product tester", new Employer("ACME"), new Location("Desert"), new PositionType("Quality control"), new CoreCompetency("Persistence"));
-
         String jobString = job.toString();
         assertTrue(jobString.startsWith("\n"));
         assertTrue(jobString.endsWith("\n"));
+    }
+
+    @Test
+    public void testToStringContainsCorrectLabelsAndData() {
+        Job job = new Job("Product tester", new Employer("ACME"), new Location("Desert"), new PositionType("Quality control"), new CoreCompetency("Persistence"));
+        String jobString = job.toString();
 
         String[] lines = jobString.split("\n");
         assertEquals("ID: " + job.getId(), lines[1]);
@@ -67,4 +72,23 @@ public class JobTest {
         assertEquals("Core Competency: " + job.getCoreCompetency(), lines[6]);
     }
 
+    @Test
+    public void testToStringHandlesEmptyField() {
+        // Create a job with an empty employer field
+        Job job = new Job("", new Employer(""), new Location("Desert"), new PositionType("Quality control"), new CoreCompetency("Persistence"));
+
+        // Call the toString method on the job object
+        String jobString = job.toString();
+
+        // Split the string by new line characters
+        String[] lines = jobString.split("\n");
+
+        // Assert that each line contains the correct label and "Data not available" for empty fields
+        assertEquals("ID: " + job.getId(), lines[1]);
+        assertEquals("Name: Data not available", lines[2]);
+        assertEquals("Employer: Data not available", lines[3]);
+        assertEquals("Location: Desert", lines[4]);
+        assertEquals("Position Type: Quality control", lines[5]);
+        assertEquals("Core Competency: Persistence", lines[6]);
+    }
 }
